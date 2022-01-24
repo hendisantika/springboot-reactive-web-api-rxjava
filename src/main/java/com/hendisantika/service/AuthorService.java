@@ -1,10 +1,14 @@
 package com.hendisantika.service;
 
 import com.hendisantika.dto.request.AddAuthorRequest;
+import com.hendisantika.entity.Author;
 import com.hendisantika.repository.AuthorRepository;
 import io.reactivex.Single;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 /**
  * Created by IntelliJ IDEA.
@@ -30,5 +34,12 @@ public class AuthorService {
             String addedAuthorId = authorRepository.save(toAuthor(addAuthorRequest)).getId();
             singleSubscriber.onSuccess(addedAuthorId);
         });
+    }
+
+    private Author toAuthor(AddAuthorRequest addAuthorRequest) {
+        Author author = new Author();
+        BeanUtils.copyProperties(addAuthorRequest, author);
+        author.setId(UUID.randomUUID().toString());
+        return author;
     }
 }
