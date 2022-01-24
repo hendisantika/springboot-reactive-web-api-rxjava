@@ -63,4 +63,18 @@ public class BookService {
     public Completable updateBook(UpdateBookRequest updateBookRequest) {
         return updateBookToRepository(updateBookRequest);
     }
+
+    private Completable updateBookToRepository(UpdateBookRequest updateBookRequest) {
+        return Completable.create(completableSubscriber -> {
+            Optional<Book> optionalBook = bookRepository.findById(updateBookRequest.getId());
+            if (!optionalBook.isPresent())
+                completableSubscriber.onError(new EntityNotFoundException());
+            else {
+                Book book = optionalBook.get();
+                book.setTitle(updateBookRequest.getTitle());
+                bookRepository.save(book);
+                completableSubscriber.onComplete();
+            }
+        });
+    }
 }
