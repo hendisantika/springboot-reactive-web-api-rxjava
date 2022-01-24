@@ -123,4 +123,8 @@ public class BookService {
             }
         });
     }
+
+    public Completable deleteBook(String id) {
+        return deleteBookInRepository(id);
+    }
 }
