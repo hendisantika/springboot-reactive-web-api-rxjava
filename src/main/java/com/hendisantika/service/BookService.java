@@ -1,7 +1,9 @@
 package com.hendisantika.service;
 
+import com.hendisantika.dto.request.AddBookRequest;
 import com.hendisantika.repository.AuthorRepository;
 import com.hendisantika.repository.BookRepository;
+import io.reactivex.Single;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,4 +24,8 @@ public class BookService {
 
     @Autowired
     private AuthorRepository authorRepository;
+
+    public Single<String> addBook(AddBookRequest addBookRequest) {
+        return saveBookToRepository(addBookRequest);
+    }
 }
