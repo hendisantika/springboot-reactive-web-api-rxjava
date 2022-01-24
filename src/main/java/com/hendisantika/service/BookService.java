@@ -11,6 +11,7 @@ import io.reactivex.Completable;
 import io.reactivex.Single;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -83,5 +84,12 @@ public class BookService {
     public Single<List<BookResponse>> getAllBooks(int limit, int page) {
         return findAllBooksInRepository(limit, page)
                 .map(this::toBookResponseList);
+    }
+
+    private Single<List<Book>> findAllBooksInRepository(int limit, int page) {
+        return Single.create(singleSubscriber -> {
+            List<Book> books = bookRepository.findAll(PageRequest.of(page, limit)).getContent();
+            singleSubscriber.onSuccess(books);
+        });
     }
 }
