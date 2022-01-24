@@ -1,10 +1,12 @@
 package com.hendisantika.service;
 
 import com.hendisantika.dto.request.AddBookRequest;
+import com.hendisantika.dto.request.UpdateBookRequest;
 import com.hendisantika.entity.Author;
 import com.hendisantika.entity.Book;
 import com.hendisantika.repository.AuthorRepository;
 import com.hendisantika.repository.BookRepository;
+import io.reactivex.Completable;
 import io.reactivex.Single;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,5 +58,9 @@ public class BookService {
                 .id(addBookRequest.getAuthorId())
                 .build());
         return book;
+    }
+
+    public Completable updateBook(UpdateBookRequest updateBookRequest) {
+        return updateBookToRepository(updateBookRequest);
     }
 }
