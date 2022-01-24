@@ -4,6 +4,7 @@ import com.hendisantika.dto.request.AddBookRequest;
 import com.hendisantika.dto.request.UpdateBookRequest;
 import com.hendisantika.dto.request.UpdateBookWebRequest;
 import com.hendisantika.dto.response.BaseWebResponse;
+import com.hendisantika.dto.response.BookWebResponse;
 import com.hendisantika.service.BookService;
 import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -66,5 +68,15 @@ public class BookRestController {
         BeanUtils.copyProperties(updateBookWebRequest, updateBookRequest);
         updateBookRequest.setId(bookId);
         return updateBookRequest;
+    }
+
+    @GetMapping(
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public Single<ResponseEntity<BaseWebResponse<List<BookWebResponse>>>> getAllBooks(@RequestParam(value = "limit", defaultValue = "5") int limit,
+                                                                                      @RequestParam(value = "page", defaultValue = "0") int page) {
+        return bookService.getAllBooks(limit, page)
+                .subscribeOn(Schedulers.io())
+                .map(bookResponses -> ResponseEntity.ok(BaseWebResponse.successWithData(toBookWebResponseList(bookResponses))));
     }
 }
