@@ -107,4 +107,8 @@ public class BookService {
         bookResponse.setAuthorName(book.getAuthor().getName());
         return bookResponse;
     }
+
+    public Single<BookResponse> getBookDetail(String id) {
+        return findBookDetailInRepository(id);
+    }
 }
