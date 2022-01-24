@@ -1,8 +1,8 @@
 package com.hendisantika.dto.response;
 
+import com.hendisantika.entity.ErrorCode;
 import lombok.Builder;
 import lombok.Getter;
-import org.h2.api.ErrorCode;
 
 /**
  * Created by IntelliJ IDEA.
