@@ -24,4 +24,11 @@ public class AuthorService {
     public Single<String> addAuthor(AddAuthorRequest addAuthorRequest) {
         return addAuthorToRepository(addAuthorRequest);
     }
+
+    private Single<String> addAuthorToRepository(AddAuthorRequest addAuthorRequest) {
+        return Single.create(singleSubscriber -> {
+            String addedAuthorId = authorRepository.save(toAuthor(addAuthorRequest)).getId();
+            singleSubscriber.onSuccess(addedAuthorId);
+        });
+    }
 }
