@@ -1,10 +1,12 @@
 package com.hendisantika.controller;
 
+import com.hendisantika.dto.request.AddAuthorRequest;
 import com.hendisantika.dto.request.AddAuthorWebRequest;
 import com.hendisantika.dto.response.BaseWebResponse;
 import com.hendisantika.service.AuthorService;
 import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -42,5 +44,11 @@ public class AuthorRestController {
                 .map(s -> ResponseEntity
                         .created(URI.create("/api/authors/" + s))
                         .body(BaseWebResponse.successNoData()));
+    }
+
+    private AddAuthorRequest toAddAuthorRequest(AddAuthorWebRequest addAuthorWebRequest) {
+        AddAuthorRequest addAuthorRequest = new AddAuthorRequest();
+        BeanUtils.copyProperties(addAuthorWebRequest, addAuthorRequest);
+        return addAuthorRequest;
     }
 }
