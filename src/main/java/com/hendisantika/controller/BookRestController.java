@@ -1,11 +1,13 @@
 package com.hendisantika.controller;
 
 import com.hendisantika.dto.request.AddBookRequest;
+import com.hendisantika.dto.request.UpdateBookRequest;
 import com.hendisantika.dto.request.UpdateBookWebRequest;
 import com.hendisantika.dto.response.BaseWebResponse;
 import com.hendisantika.service.BookService;
 import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -57,5 +59,12 @@ public class BookRestController {
         return bookService.updateBook(toUpdateBookRequest(bookId, updateBookWebRequest))
                 .subscribeOn(Schedulers.io())
                 .toSingle(() -> ResponseEntity.ok(BaseWebResponse.successNoData()));
+    }
+
+    private UpdateBookRequest toUpdateBookRequest(String bookId, UpdateBookWebRequest updateBookWebRequest) {
+        UpdateBookRequest updateBookRequest = new UpdateBookRequest();
+        BeanUtils.copyProperties(updateBookWebRequest, updateBookRequest);
+        updateBookRequest.setId(bookId);
+        return updateBookRequest;
     }
 }
