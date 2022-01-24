@@ -1,6 +1,7 @@
 package com.hendisantika.controller;
 
 import com.hendisantika.dto.request.AddBookRequest;
+import com.hendisantika.dto.request.UpdateBookWebRequest;
 import com.hendisantika.dto.response.BaseWebResponse;
 import com.hendisantika.service.BookService;
 import io.reactivex.Single;
@@ -8,10 +9,7 @@ import io.reactivex.schedulers.Schedulers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 
@@ -41,5 +39,23 @@ public class BookRestController {
         return bookService.addBook(addBookRequest).subscribeOn(Schedulers.io()).map(
                 s -> ResponseEntity.created(URI.create("/api/books/" + s))
                         .body(BaseWebResponse.successNoData()));
+    }
+
+    /*private AddBookRequest toAddBookRequest(AddBookWebRequest addBookWebRequest) {
+        AddBookRequest addBookRequest = new AddBookRequest();
+        BeanUtils.copyProperties(addBookWebRequest, addBookRequest);
+        return addBookRequest;
+    }*/
+
+    @PutMapping(
+            value = "/{bookId}",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public Single<ResponseEntity<BaseWebResponse>> updateBook(@PathVariable(value = "bookId") String bookId,
+                                                              @RequestBody UpdateBookWebRequest updateBookWebRequest) {
+        return bookService.updateBook(toUpdateBookRequest(bookId, updateBookWebRequest))
+                .subscribeOn(Schedulers.io())
+                .toSingle(() -> ResponseEntity.ok(BaseWebResponse.successNoData()));
     }
 }
