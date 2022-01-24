@@ -1,11 +1,15 @@
 package com.hendisantika.service;
 
 import com.hendisantika.dto.request.AddBookRequest;
+import com.hendisantika.entity.Author;
 import com.hendisantika.repository.AuthorRepository;
 import com.hendisantika.repository.BookRepository;
 import io.reactivex.Single;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import javax.persistence.EntityNotFoundException;
+import java.util.Optional;
 
 /**
  * Created by IntelliJ IDEA.
@@ -27,5 +31,17 @@ public class BookService {
 
     public Single<String> addBook(AddBookRequest addBookRequest) {
         return saveBookToRepository(addBookRequest);
+    }
+
+    private Single<String> saveBookToRepository(AddBookRequest addBookRequest) {
+        return Single.create(singleSubscriber -> {
+            Optional<Author> optionalAuthor = authorRepository.findById(addBookRequest.getAuthorId());
+            if (!optionalAuthor.isPresent())
+                singleSubscriber.onError(new EntityNotFoundException());
+            else {
+                String addedBookId = bookRepository.save(toBook(addBookRequest)).getId();
+                singleSubscriber.onSuccess(addedBookId);
+            }
+        });
     }
 }
