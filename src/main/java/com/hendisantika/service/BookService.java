@@ -18,6 +18,7 @@ import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * Created by IntelliJ IDEA.
@@ -91,5 +92,12 @@ public class BookService {
             List<Book> books = bookRepository.findAll(PageRequest.of(page, limit)).getContent();
             singleSubscriber.onSuccess(books);
         });
+    }
+
+    private List<BookResponse> toBookResponseList(List<Book> bookList) {
+        return bookList
+                .stream()
+                .map(this::toBookResponse)
+                .collect(Collectors.toList());
     }
 }
