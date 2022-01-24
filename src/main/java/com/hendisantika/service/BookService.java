@@ -127,4 +127,16 @@ public class BookService {
     public Completable deleteBook(String id) {
         return deleteBookInRepository(id);
     }
+
+    private Completable deleteBookInRepository(String id) {
+        return Completable.create(completableSubscriber -> {
+            Optional<Book> optionalBook = bookRepository.findById(id);
+            if (!optionalBook.isPresent())
+                completableSubscriber.onError(new EntityNotFoundException());
+            else {
+                bookRepository.delete(optionalBook.get());
+                completableSubscriber.onComplete();
+            }
+        });
+    }
 }
