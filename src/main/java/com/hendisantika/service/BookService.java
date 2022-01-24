@@ -100,4 +100,11 @@ public class BookService {
                 .map(this::toBookResponse)
                 .collect(Collectors.toList());
     }
+
+    private BookResponse toBookResponse(Book book) {
+        BookResponse bookResponse = new BookResponse();
+        BeanUtils.copyProperties(book, bookResponse);
+        bookResponse.setAuthorName(book.getAuthor().getName());
+        return bookResponse;
+    }
 }
