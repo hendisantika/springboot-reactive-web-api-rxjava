@@ -2,6 +2,7 @@ package com.hendisantika.service;
 
 import com.hendisantika.dto.request.AddBookRequest;
 import com.hendisantika.dto.request.UpdateBookRequest;
+import com.hendisantika.dto.response.BookResponse;
 import com.hendisantika.entity.Author;
 import com.hendisantika.entity.Book;
 import com.hendisantika.repository.AuthorRepository;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -76,5 +78,10 @@ public class BookService {
                 completableSubscriber.onComplete();
             }
         });
+    }
+
+    public Single<List<BookResponse>> getAllBooks(int limit, int page) {
+        return findAllBooksInRepository(limit, page)
+                .map(this::toBookResponseList);
     }
 }
