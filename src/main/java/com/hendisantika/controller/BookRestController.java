@@ -88,4 +88,10 @@ public class BookRestController {
                 .map(this::toBookWebResponse)
                 .collect(Collectors.toList());
     }
+
+    private BookWebResponse toBookWebResponse(BookResponse bookResponse) {
+        BookWebResponse bookWebResponse = new BookWebResponse();
+        BeanUtils.copyProperties(bookResponse, bookWebResponse);
+        return bookWebResponse;
+    }
 }
