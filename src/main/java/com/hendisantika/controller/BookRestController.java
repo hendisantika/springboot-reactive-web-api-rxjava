@@ -4,6 +4,7 @@ import com.hendisantika.dto.request.AddBookRequest;
 import com.hendisantika.dto.request.UpdateBookRequest;
 import com.hendisantika.dto.request.UpdateBookWebRequest;
 import com.hendisantika.dto.response.BaseWebResponse;
+import com.hendisantika.dto.response.BookResponse;
 import com.hendisantika.dto.response.BookWebResponse;
 import com.hendisantika.service.BookService;
 import io.reactivex.Single;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by IntelliJ IDEA.
@@ -78,5 +80,12 @@ public class BookRestController {
         return bookService.getAllBooks(limit, page)
                 .subscribeOn(Schedulers.io())
                 .map(bookResponses -> ResponseEntity.ok(BaseWebResponse.successWithData(toBookWebResponseList(bookResponses))));
+    }
+
+    private List<BookWebResponse> toBookWebResponseList(List<BookResponse> bookResponseList) {
+        return bookResponseList
+                .stream()
+                .map(this::toBookWebResponse)
+                .collect(Collectors.toList());
     }
 }
