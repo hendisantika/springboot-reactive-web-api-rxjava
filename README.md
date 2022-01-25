@@ -18,3 +18,20 @@ The reactive REST API to be built is just a simple CRUD about authors and books.
 * [GET] /api/book/{bookId} → get a book’s detail
 * [DELETE] /api/book/{bookId} → delete a book
 
+### Images Screen shot
+
+Swagger UI
+
+![Swagger UI](img/swagger-ui.png "Swagger UI")
+
+H2 Console
+
+![H2 Console](img/h2.png "H2 Console")
+
+Books Console
+
+![Books Console](img/books.png "Books Console")
+
+Authors Console
+
+![Authors Console](img/author.png "Authors Console")
