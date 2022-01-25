@@ -6,6 +6,11 @@ import com.hendisantika.dto.response.BaseWebResponse;
 import com.hendisantika.service.AuthorService;
 import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -29,6 +34,7 @@ import java.net.URI;
  */
 @RestController
 @RequestMapping(value = "/api/authors")
+@Tag(name = "Author", description = "Endpoints to manage Author")
 public class AuthorRestController {
 
     @Autowired
@@ -37,6 +43,23 @@ public class AuthorRestController {
     @PostMapping(
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    @Operation(
+            summary = "Add New Author",
+            description = "Handle New Author.",
+            tags = {"Author"})
+    @ApiResponses(value = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                    description = "Success",
+                    responseCode = "200",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation =
+                            BaseWebResponse.class))
+            ),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(description = "Not found", responseCode = "404",
+                    content = @Content),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(description = "Internal error", responseCode = "500"
+                    , content = @Content)
+    }
     )
     public Single<ResponseEntity<BaseWebResponse>> addAuthor(@RequestBody AddAuthorWebRequest addAuthorWebRequest) {
         return authorService.addAuthor(toAddAuthorRequest(addAuthorWebRequest))

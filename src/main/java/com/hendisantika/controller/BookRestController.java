@@ -9,6 +9,11 @@ import com.hendisantika.dto.response.BookWebResponse;
 import com.hendisantika.service.BookService;
 import io.reactivex.Single;
 import io.reactivex.schedulers.Schedulers;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -31,6 +36,7 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequestMapping(value = "/api/books")
+@Tag(name = "Book", description = "Endpoints to manage Books")
 public class BookRestController {
 
     @Autowired
@@ -39,6 +45,23 @@ public class BookRestController {
     @PostMapping(
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    @Operation(
+            summary = "Add New Book",
+            description = "Handle New Book.",
+            tags = {"Book"})
+    @ApiResponses(value = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                    description = "Success",
+                    responseCode = "200",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation =
+                            BaseWebResponse.class))
+            ),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(description = "Not found", responseCode = "404",
+                    content = @Content),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(description = "Internal error", responseCode = "500"
+                    , content = @Content)
+    }
     )
     public Single<ResponseEntity<BaseWebResponse>> addBook(
             @RequestBody AddBookRequest addBookRequest) {
@@ -58,6 +81,23 @@ public class BookRestController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
+    @Operation(
+            summary = "Update Book By ID",
+            description = "Update Book By ID.",
+            tags = {"Book"})
+    @ApiResponses(value = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                    description = "Success",
+                    responseCode = "200",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation =
+                            BaseWebResponse.class))
+            ),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(description = "Not found", responseCode = "404",
+                    content = @Content),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(description = "Internal error", responseCode = "500"
+                    , content = @Content)
+    }
+    )
     public Single<ResponseEntity<BaseWebResponse>> updateBook(@PathVariable(value = "bookId") String bookId,
                                                               @RequestBody UpdateBookWebRequest updateBookWebRequest) {
         return bookService.updateBook(toUpdateBookRequest(bookId, updateBookWebRequest))
@@ -74,6 +114,23 @@ public class BookRestController {
 
     @GetMapping(
             produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    @Operation(
+            summary = "Get All Books",
+            description = "Get All Books.",
+            tags = {"Book"})
+    @ApiResponses(value = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                    description = "Success",
+                    responseCode = "200",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation =
+                            BaseWebResponse.class))
+            ),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(description = "Not found", responseCode = "404",
+                    content = @Content),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(description = "Internal error", responseCode = "500"
+                    , content = @Content)
+    }
     )
     public Single<ResponseEntity<BaseWebResponse<List<BookWebResponse>>>> getAllBooks(@RequestParam(value = "limit", defaultValue = "5") int limit,
                                                                                       @RequestParam(value = "page", defaultValue = "0") int page) {
@@ -99,6 +156,23 @@ public class BookRestController {
             value = "/{bookId}",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
+    @Operation(
+            summary = "Search Book by ID",
+            description = "Search Book by ID.",
+            tags = {"Book"})
+    @ApiResponses(value = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                    description = "Success",
+                    responseCode = "200",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation =
+                            BaseWebResponse.class))
+            ),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(description = "Not found", responseCode = "404",
+                    content = @Content),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(description = "Internal error", responseCode = "500"
+                    , content = @Content)
+    }
+    )
     public Single<ResponseEntity<BaseWebResponse<BookWebResponse>>> getBookDetail(@PathVariable(value = "bookId") String bookId) {
         return bookService.getBookDetail(bookId)
                 .subscribeOn(Schedulers.io())
@@ -109,6 +183,23 @@ public class BookRestController {
     @DeleteMapping(
             value = "/{bookId}",
             produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    @Operation(
+            summary = "Delete Book by ID",
+            description = "Delete Book by ID.",
+            tags = {"Book"})
+    @ApiResponses(value = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                    description = "Success",
+                    responseCode = "200",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation =
+                            BaseWebResponse.class))
+            ),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(description = "Not found", responseCode = "404",
+                    content = @Content),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(description = "Internal error", responseCode = "500"
+                    , content = @Content)
+    }
     )
     public Single<ResponseEntity<BaseWebResponse>> deleteBook(@PathVariable(value = "bookId") String bookId) {
         return bookService.deleteBook(bookId)
